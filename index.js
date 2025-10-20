@@ -16,7 +16,7 @@ const db = mysql.createConnection({
     user: 'root',       
     password: 'panggunggembira623',   
     database: 'biodata',
-    port: 3306
+    port: 3308
 })
 
 db.connect((err) => {
@@ -27,7 +27,7 @@ db.connect((err) => {
     console.log('Connected to the database.');
 });
 app.get('/users', (req, res) => {
-    db.query('SELECT * FROM users', (err, results) => {
+    db.query('SELECT * FROM mahasiswa', (err, results) => {
         if (err) {
             console.error('Error fetching users:', err);
             req.status(500).send('Error fetching users');
@@ -44,7 +44,7 @@ app.post('/api/user', (req, res) => {
     }
 
     db,query(
-        'INSERT INTO users (nama, nim, kelas) VALUES (?, ?, ?)',
+        'INSERT INTO mahasiswa (nama, nim, kelas) VALUES (?, ?, ?)',
         [nama, nim, kelas],
         (err, results) => {
             if (err) {
@@ -59,7 +59,7 @@ app.put('/api/user/:id', (req, res) => {
     const userId = req.params.id;
     const { nama, nim, kelas } = req.body;
     db.query(
-        'update users set nama = ?, nim = ?, kelas = ? where id = ?',
+        'UPDATE mahasiswa SET nama = ?, nim = ?, kelas = ? where id = ?',
         [nama, nim, kelas, userId],
         (err, results) => { 
             if (err) {
