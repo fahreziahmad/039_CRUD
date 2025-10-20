@@ -26,3 +26,13 @@ db.connect((err) => {
     }
     console.log('Connected to the database.');
 });
+app.get('/users', (req, res) => {
+    db.query('SELECT * FROM users', (err, results) => {
+        if (err) {
+            console.error('Error fetching users:', err);
+            req.status(500).send('Error fetching users');
+            return;
+        }
+        res.json(results);
+    })
+});
