@@ -2,7 +2,7 @@ const express = require("express");
 let mysql = require('mysql2');
 const app = express();
 const PORT = 3000;
-app.use(express.json);
+app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 app.get('/', (req, res) => {
@@ -16,8 +16,8 @@ const db = mysql.createConnection({
     user: 'root',       
     password: 'panggunggembira623',   
     database: 'biodata',
-    port: 3308
-})
+    port: '3308'
+});
 
 db.connect((err) => {
     if (err) {
@@ -26,24 +26,24 @@ db.connect((err) => {
     }
     console.log('Connected to the database.');
 });
-app.get('/users', (req, res) => {
+app.get('/api/users', (req, res) => {
     db.query('SELECT * FROM mahasiswa', (err, results) => {
         if (err) {
-            console.error('Error fetching users:', err);
-            req.status(500).send('Error fetching users');
+            console.error('Error fetching users:', err.stack);
+            req.statusCode(500).json('Error fetching users');
             return;
         }
         res.json(results);
     })
 });
-app.post('/api/user', (req, res) => {
+app.post('/api/users', (req, res) => {
     const { nama, nim, kelas } = req.body;
 
     if (!nama || !nim || !kelas) {
         return res.status(400).json({ error: 'tolong isi nama, nim, dan kelas' });
     }
 
-    db,query(
+    db.query(
         'INSERT INTO mahasiswa (nama, nim, kelas) VALUES (?, ?, ?)',
         [nama, nim, kelas],
         (err, results) => {
@@ -55,7 +55,7 @@ app.post('/api/user', (req, res) => {
         }
     );
 });
-app.put('/api/user/:id', (req, res) => {
+app.put('/api/users/:id', (req, res) => {
     const userId = req.params.id;
     const { nama, nim, kelas } = req.body;
     db.query(
@@ -70,7 +70,7 @@ app.put('/api/user/:id', (req, res) => {
         }
     )
 })
-app.delete('/api/user/:id', (req, res) => {
+app.delete('/api/users/:id', (req, res) => {
     const userId = req.params.id;
     db.query('DELETE FROM mahasiswa WHERE id = ?', [userId], (err, results) => {
         if (err) {
